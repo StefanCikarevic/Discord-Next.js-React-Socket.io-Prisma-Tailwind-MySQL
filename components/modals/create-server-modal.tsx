@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -24,18 +24,17 @@ import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/file-upload";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal-store";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Please enter a server name" }),
   imageUrl: z.string().min(1, { message: "Please enter a valid image URL" }),
 });
-const InitialModal = () => {
-  const [isMounted, setIsMounted] = React.useState(false);
+const CreateServerModal = () => {
   const router = useRouter();
+  const { isOpen, onClose, type } = useModal();
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const isModalOpen = isOpen && type === "createServer";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -51,16 +50,16 @@ const InitialModal = () => {
       await axios.post("/api/servers", values);
       form.reset();
       router.refresh();
-      window.location.reload();
     } catch (e) {}
   };
 
-  if (!isMounted) {
-    return null;
-  }
+  const handleClose = () => {
+    onClose();
+    form.reset();
+  };
 
   return (
-    <Dialog open>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
@@ -131,4 +130,4 @@ const InitialModal = () => {
   );
 };
 
-export default InitialModal;
+export default CreateServerModal;
