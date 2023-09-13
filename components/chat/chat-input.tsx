@@ -10,6 +10,7 @@ import axios from "axios";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Plus, Smile } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { EmojiPicker } from "@/components/emoji-picker";
 
 interface ChatInputProps {
   apiUrl: string;
@@ -77,12 +78,11 @@ const ChatInput = ({ apiUrl, query, type, name }: ChatInputProps) => {
                     {...field}
                   />
                   <div className="absolute top-7 right-8">
-                    <Smile />
-                    {/*<EmojiPicker*/}
-                    {/*  onChange={(emoji: string) =>*/}
-                    {/*    field.onChange(`${field.value} ${emoji}`)*/}
-                    {/*  }*/}
-                    {/*/>*/}
+                    <EmojiPicker
+                      onChange={(emoji: string) =>
+                        field.onChange(`${field.value} ${emoji}`)
+                      }
+                    />
                   </div>
                 </div>
               </FormControl>
